@@ -3,16 +3,14 @@ import torch
 from diffusers import StableDiffusionPipeline
 from PIL import Image
 
-# 🔹 Paths
+
 MODEL_PATH = "/Users/apple/stable-diffusion-webui/models/Stable-diffusion/comicDiffusion_v2_diffusers/"
 SAVE_DIR = "/Users/apple/Desktop/NLP Run/ComicCrafter/backend/static"
 os.makedirs(SAVE_DIR, exist_ok=True)
 
-# 🔹 Check if MPS (Apple Metal) is available, else use CPU
 device = "cpu"  # Force using CPU to avoid memory issue on MPS
 
 
-# 🔹 Load Stable Diffusion Comic Model
 def load_model():
     print("🔹 Loading Stable Diffusion Model...")
     try:
@@ -24,7 +22,6 @@ def load_model():
         print(f"❌ Error loading model: {e}")
         return None
 
-# 🔹 Function to Generate Images from Text
 def generate_comic_image(pipe, text, image_name):
     """Generate an image using Stable Diffusion based on paragraph text."""
     try:
