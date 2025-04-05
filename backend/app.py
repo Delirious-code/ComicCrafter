@@ -3,15 +3,15 @@ import os
 from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
 
-# Ensure the backend can find the text generation module
+# Ensuring the backend can find the text generation module
 sys.path.append(os.path.abspath(os.path.dirname(__file__)))
 
 from text_gen import generate_story  # Importing the story generation function
 
 app = Flask(__name__)
-CORS(app, resources={r"/*": {"origins": "*"}})  # Allow all origins
+CORS(app, resources={r"/*": {"origins": "*"}})  # Allowing all origins
 
-# The path to the generated HTML file
+
 GENERATED_HTML_FILE = os.path.join(os.path.dirname(__file__), 'static', 'formatted_generated_story.html')
 
 @app.route('/generate', methods=['POST'])
@@ -25,12 +25,12 @@ def generate():
         if not prompt:
             return jsonify({"error": "Prompt cannot be empty"}), 400
 
-        # Generate the story and save it as an HTML file
+        # Generating the story and save it as an HTML file
         story = generate_story(prompt)
         
-        # Save the generated story as HTML to the static folder
+        # Saving the generated story as HTML to the static folder
         with open(GENERATED_HTML_FILE, 'w') as html_file:
-            html_file.write(story)  # You may need to format this HTML properly based on your needs
+            html_file.write(story)  
 
         return jsonify({"story": story})
 
