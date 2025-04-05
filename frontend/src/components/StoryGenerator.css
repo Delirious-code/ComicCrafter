@@ -1,0 +1,96 @@
+.story-generator-container {
+    display: flex;
+    height: 100vh;
+    background-color: #121212;
+    color: white;
+    font-family: Arial, sans-serif;
+  }
+  
+  .left-panel,
+  .right-panel {
+    flex: 1;
+    padding: 30px;
+  }
+  #saveBtn {
+    margin-top: 20px;
+    padding: 10px 18px;
+    background-color: #03DAC6;
+    color: #000;
+    border: none;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+    display: none;  /* This hides it initially */
+    align-self: flex-start;
+  }
+  
+  #saveBtn:hover {
+    background-color: #00bfa5;
+  }
+  
+  
+  .left-panel {
+    border-right: 1px solid #444;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .left-panel form {
+    width: 100%;
+    text-align: center;
+  }
+  
+  .left-panel textarea {
+    width: 80%;
+    padding: 10px;
+    font-size: 16px;
+    background-color: #1e1e1e;
+    color: #fff;
+    border: 1px solid #444;
+    border-radius: 5px;
+    resize: none;
+  }
+  
+  .left-panel button {
+    margin-top: 10px;
+    padding: 10px 20px;
+    background-color: #03dac6;
+    border: none;
+    color: black;
+    font-weight: bold;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .left-panel button:hover {
+    background-color: #02c4af;
+  }
+  
+  .error {
+    color: red;
+    margin-top: 10px;
+  }
+  
+  .right-panel {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    overflow-y: auto;
+  }
+  
+  .right-panel h2 {
+    margin-bottom: 20px;
+  }
+  
+  .story-output {
+    flex: 2;
+    padding: 20px 30px 30px 30px; /* reduced top padding */
+    background-color: #181818;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+  }
+  

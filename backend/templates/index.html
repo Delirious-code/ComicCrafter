@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ComicCrafter</title>
+  <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+  <div class="container">
+    <h1>ComicCrafter</h1>
+    <p>Enter a prompt to generate your own AI comic!</p>
+    <input type="text" id="promptInput" placeholder="A knight in his last fight" />
+    <button id="generateBtn">Generate Comic</button>
+    <div id="error" class="error"></div>
+    <div id="output" class="output"></div>
+  </div>
+
+  <script>
+    const generateBtn = document.getElementById("generateBtn");
+    const promptInput = document.getElementById("promptInput");
+    const outputDiv = document.getElementById("output");
+    const errorDiv = document.getElementById("error");
+
+    generateBtn.addEventListener("click", async () => {
+      const prompt = promptInput.value.trim();
+      if (!prompt) {
+        errorDiv.textContent = "Please enter a prompt.";
+        return;
+      }
+
+      errorDiv.textContent = "";
+      outputDiv.textContent = "Generating story...";
+
+      const response = await fetch("/generate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ prompt }),
+      });
+
+      const data = await response.json();
+      if (data.error) {
+        errorDiv.textContent = data.error;
+        outputDiv.textContent = "";
+      } else {
+        outputDiv.innerText = data.story;
+      }
+    });
+  </script>
+</body>
+</html>

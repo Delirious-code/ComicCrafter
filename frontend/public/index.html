@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ComicCrafter</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: 'Inter', sans-serif;
+    }
+
+    body {
+      background-color: #121212;
+      color: #ffffff;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+    }
+
+    .container {
+      display: flex;
+      flex: 1;
+      overflow: hidden;
+    }
+
+    .input-section {
+      flex: 1;
+      background-color: #1e1e1e;
+      padding: 30px;
+      border-right: 1px solid #333;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .input-section h2 {
+      margin-bottom: 20px;
+    }
+
+    .input-section textarea {
+      width: 100%;
+      height: 250px;
+      padding: 15px;
+      font-size: 15px;
+      background-color: #2a2a2a;
+      color: #fff;
+      border: 1px solid #444;
+      border-radius: 8px;
+      resize: none;
+      outline: none;
+    }
+
+    .input-section button {
+      margin-top: 15px;
+      padding: 12px;
+      font-size: 15px;
+      font-weight: bold;
+      background-color: #03DAC6;
+      color: #000;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .input-section button:hover {
+      background-color: #00bfa5;
+    }
+
+    .story-output {
+      flex: 2;
+      padding: 30px;
+      background-color: #181818;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .story-output h2 {
+      margin-top: 0;
+      margin-bottom: 20px;
+      border-bottom: 1px solid #333;
+      padding-bottom: 10px;
+    }
+
+    .story-output p {
+      line-height: 1.7;
+      margin-bottom: 16px;
+    }
+
+    .story-output strong {
+      font-weight: 600;
+    }
+
+    #saveBtn {
+      margin-top: 20px;
+      padding: 10px 18px;
+      background-color: #03DAC6;
+      color: #000;
+      border: none;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+      display: none;
+      align-self: flex-start;
+    }
+
+    #saveBtn:hover {
+      background-color: #00bfa5;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="input-section">
+      <h2>Enter Prompt</h2>
+      <textarea id="prompt" placeholder="Describe your comic scene..."></textarea>
+      <button onclick="generateStory()">Generate</button>
+    </div>
+    <div class="story-output">
+      <h2>Generated Story</h2>
+      <div id="storyContainer"></div>
+      <button id="saveBtn" onclick="saveStory()">Save Story</button>
+    </div>
+  </div>
+
+  <script>
+    async function generateStory() {
+      const prompt = document.getElementById("prompt").value.trim();
+      const storyContainer = document.getElementById("storyContainer");
+      const saveBtn = document.getElementById("saveBtn");
+
+      if (!prompt) {
+        storyContainer.innerHTML = "<p>Please enter a prompt.</p>";
+        saveBtn.style.display = "none";
+        return;
+      }
+
+      storyContainer.innerHTML = "<p>Generating story...</p>";
+      saveBtn.style.display = "none";
+
+      try {
+        const response = await fetch("http://localhost:5000/generate", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ prompt }),
+        });
+
+        if (!response.ok) {
+          throw new Error("Server Error! Please try again later.");
+        }
+
+        const data = await response.json();
+
+        if (data.error || !data.story) {
+          storyContainer.innerHTML = `<p style="color:red">${data.error || "No story generated."}</p>`;
+          saveBtn.style.display = "none";
+          return;
+        }
+
+        storyContainer.innerHTML = `<p>${data.story.replace(/\n/g, "<br>")}</p>`;
+        saveBtn.style.display = "inline-block";
+      } catch (error) {
+        storyContainer.innerHTML = `<p style="color:red">Error generating story.</p>`;
+        saveBtn.style.display = "none";
+      }
+    }
+
+    function saveStory() {
+      const storyText = document.getElementById("storyContainer").innerText;
+      if (!storyText.trim()) return;
+
+      const blob = new Blob([storyText], { type: "text/plain" });
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.download = "generated_story.txt";
+      link.click();
+    }
+  </script>
+</body>
+</html>
